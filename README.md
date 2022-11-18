@@ -2,6 +2,8 @@
 
 Makes managing your own Root Certificate Authority (CA) really easy using Docker. No need to learn OpenSSL commands; gives you results in minutes.
 
+> Intended for limited development and test usage by developers and testers. Do _not_ use to create enterprise-wide certificates.
+
 Based on scripts originally written by [zablik](https://github.com/zablik/ssl_cert_generator).
 
 ## Setup
