@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  certs:
+    image: cpwood/ca-in-a-box
+    volumes:
+      - "/path/on/my/machine/to/certs:/certs"
+    environment:
+      - CERT_COUNTRY=GB
+      - CERT_STATE=Lancashire
+      - CERT_LOCALITY=Wigan
+      - CERT_ORG=My Company Limited
+      - CA_COMMON_NAME=My Company Limited Root CA
