@@ -16,7 +16,7 @@ fi
 
 ROOT_CA_DIR="/certs/root"
 ROOT_CA_KEY_PATH="${ROOT_CA_DIR}/rootCA.key"
-ROOT_CA_PEM_PATH="${ROOT_CA_DIR}/rootCA.pem"
+ROOT_CA_PEM_PATH="${ROOT_CA_DIR}/rootCA.crt"
 
 if [ ! -f "$ROOT_CA_KEY_PATH" ] || [ ! -f "$ROOT_CA_PEM_PATH" ]; then
   echo "Root CA key pair does not exist";
@@ -43,6 +43,8 @@ cat v3.ext | sed s/%%DOMAIN%%/"$COMMON_NAME"/g > /tmp/__v3.ext
 echo "Generating domain certificate"
 openssl x509 -req -in device.csr -CA "$ROOT_CA_PEM_PATH" -CAkey "$ROOT_CA_KEY_PATH" -CAcreateserial -out device.crt -days "$NUM_OF_DAYS" -sha256 -extfile /tmp/__v3.ext
 
+openssl pkcs12 -export -out device.pfx -inkey device.key -in device.crt -passout pass:$PFX_PASSWORD
+
 DOMAIN_CERT_DIR="/certs/$DOMAIN"
 if [ ! -d "$DOMAIN_CERT_DIR" ]; then
   mkdir "$DOMAIN_CERT_DIR"
@@ -52,6 +54,7 @@ echo "Putting files to ${DOMAIN} directory"
 mv device.csr "${DOMAIN_CERT_DIR}/${DOMAIN}.csr"
 cp device.crt "${DOMAIN_CERT_DIR}/${DOMAIN}.crt"
 cp device.key "${DOMAIN_CERT_DIR}/${DOMAIN}.key"
+cp device.pfx "${DOMAIN_CERT_DIR}/${DOMAIN}.pfx"
 
 # remove temp file
 rm -f device.crt device.csr

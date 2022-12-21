@@ -23,6 +23,7 @@ services:
       - CERT_LOCALITY=Wigan
       - CERT_ORG=My Company Limited
       - CA_COMMON_NAME=My Company Limited Root CA
+      - PFX_PASSWORD=foobar
 ```
 
 ## Generating the Root CA Certificate
@@ -33,7 +34,7 @@ To create a 20-year Root CA, issue the following command:
 docker-compose run certs ./root_ca.sh
 ```
 
-This will create a certificate file named `rootCA.pem` in `/path/on/my/machine/to/certs/root`. The certificate should be trusted on computers within the scope of your deployment.
+This will create a certificate file named `rootCA.crt` in `/path/on/my/machine/to/certs/root`. The certificate should be trusted on computers within the scope of your deployment. Alternatively, use the `rootCA.pfx` file which will use the password specified by the `PFX_PASSWORD` environment variable.
 
 ## Generating a Domain Certificate
 

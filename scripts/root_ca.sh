@@ -7,7 +7,8 @@ cd -- "$(dirname -- "$0")" || exit;
 
 ROOT_CA_DIR="/certs/root"
 ROOT_CA_KEY_PATH="${ROOT_CA_DIR}/rootCA.key"
-ROOT_CA_PEM_PATH="${ROOT_CA_DIR}/rootCA.pem"
+ROOT_CA_PEM_PATH="${ROOT_CA_DIR}/rootCA.crt"
+ROOT_CA_PFX_PATH="${ROOT_CA_DIR}/rootCA.pfx"
 
 if [ -f "$ROOT_CA_KEY_PATH" ]; then
     echo "Root CA Key already exits. Overwrite? (y/n)"
@@ -33,7 +34,10 @@ openssl genrsa -out "$ROOT_CA_KEY_PATH" 2048
 
 SUBJECT="/C=$CERT_COUNTRY/ST=$CERT_STATE/L=$CERT_LOCALITY/O=$CERT_ORG/CN=$CA_COMMON_NAME"
 
-echo "Generating rootCA.pem"
+echo "Generating rootCA.crt"
 openssl req -x509 -new -nodes -key "$ROOT_CA_KEY_PATH" -sha256 -days 7305 -subj "$SUBJECT" -out "$ROOT_CA_PEM_PATH"
+
+echo "Generating rootCA.pfx"
+openssl pkcs12 -export -out "$ROOT_CA_PFX_PATH" -inkey "$ROOT_CA_KEY_PATH" -in "$ROOT_CA_PEM_PATH" -passout pass:$PFX_PASSWORD
 
 cd "$ORIG_PWD" || exit
